@@ -12,6 +12,8 @@ db.once('open', function() {
   console.log('mongoose connected successfully');
 });
 
+//  [{}] => an object within an array means that the schema can handle any number of objects in that array
+          //as long as the key:value pairs match key name and value type
 var projectSchema = mongoose.Schema({
     name: String,
     description: String,
@@ -21,17 +23,11 @@ var projectSchema = mongoose.Schema({
     timeline: {tasks:[{name:String,dueDate:Date}],start:Date, end:Date, status: String}
   });
 
-// var projectSchema = mongoose.Schema({
-//     _id: Schema.Types.ObjectId,
-//     name: String,
-//     description: String,
-//     customer: String
-//   });
-
 var Projects = mongoose.model('Projects', projectSchema);
+  // created collection/table with name Projects(capital) here, but will be projects(lowercase) in database
 
-var createProject = function(obj, username){ // adds a new project to projects table and project id to logged-in user in users table
-  console.log("username passed into createProject is " + username);
+var createProject = function(obj, username){ // adds a new project document/row to Projects table/collection
+                                            // and project id to logged-in user in Users table/collection
 
   var newProject = new Projects({
     _id: new mongoose.Types.ObjectId(),
@@ -42,87 +38,40 @@ var createProject = function(obj, username){ // adds a new project to projects t
   newProject.save(function(err) {
     if (err) throw err;
     console.log("Project saved.");
-    console.log(newProject._id);
-    var newID = newProject._id;
-    console.log('username in db: ', username);
-    Users.findOne({username: username}, function(err, user) {
-      console.log('user in db: ', user)
-      user.projects = user.projects.concat(newProject._id);
+
+    Users.findOne({username: username}, function(err, user) { // finding user document in Users collection to update with newProject._id
+      user.projects = user.projects.concat(newProject._id); // for some reason, user.projects.push(id) doesn't work, but array.concat works fine
       user.save();
     })
   });
 };
 
-// var selectAll = function(username) { // finds all projects via project ids in user table // refactor for for loop later, or populate method
-//   var arrOfProjects = [];
-//   Users.findOne({username: username}, function(err, user) {
-//     let finishedProjects = 0;
-//     user.projects.forEach(projectId => Projects.findById(projectId, function (err, doc) {
-//       arrOfProjects.push(doc);
-//       finishedProjects++;
-//       if (finishedProjects === user.projects.length) {
-//         return arrOfProjects;
-//       }
-//     }))
-//   })
-//   return arrOfProjects;
-// };
+var selectAll = function(username) { // returns the new user document with the projects now an array of project objects, rather than just ObjectIds
 
-// var selectAll = function(username) { // finds all projects via project ids in user table // refactor for for loop later, or populate method
-//     var arrOfProjects = [];
-//     Users.findOne({username: username}, function(err, user) {
-//       for (let i = 0; i < user.projects.length; i++) {
-//         Projects.findById(user.projects[i], function (err, doc) {
-//           console.log(doc);
-//           arrOfProjects.push(doc);
-//         });
-//       }
-//     })
-//     return arrOfProjects;
-// };
-
-var selectAll = function(username) {
-  return Users.findOne({username: username}).populate("projects").exec(function (err, projects) {
+  return Users.findOne({username: username}).populate("projects").exec(function (err, projects) { // now, in place of just ObjectIds are actual project objects
     if (err) {return err}
-
-    console.log('Projects: ', projects);
   })
 }
 
-var updateProject = function(obj) {
+var updateProject = function(obj) { // currently not being used
   Projects.findByIdAndUpdate(obj._id, obj);
 }
 
-var selectAllCustomers = function() {
+var selectAllCustomers = function() { // currently not being used by front end
   console.log("selectAllCustomers function");
   return Projects.find().select("customer");
 };
 
-// var userSchema = mongoose.Schema({
-//   username: String,
-//   password: String,
-//   projects: [{
-//         type: Schema.Types.ObjectId,
-//         ref: 'Projects'
-//   }],
-// });
-
-// var userSchema = mongoose.Schema({
-//   username: String,
-//   password: String,
-//   projects: [{projectID: String}]
-// });
-
-
+//the ref in projects in this schema is used for population in the selectAll function
 var userSchema = mongoose.Schema({
   username: String,
   password: String,
   projects: [{ type: Schema.Types.ObjectId, ref: 'Projects' }]
 });
 
-var Users = mongoose.model('Users', userSchema);
+var Users = mongoose.model('Users', userSchema); // like Projects, is Users(capital) here, but users(lowercase) in the database
 
-var createUser = function(obj) {
+var createUser = function(obj) { // creates new user document/row in Users collection/table
   var newObj = {
     username: obj.username,
     password: obj.password
@@ -132,7 +81,7 @@ var createUser = function(obj) {
   newUser.save();
 }
 
-var validateUser = function(obj) { // returns boolean
+var validateUser = function(obj) { // returns boolean, currently not being fully implemented, emulated on front end
   return Users.findOne({username: obj.username}, function(err, user) {
     if (err) return err;
     console.log("DB password is " + user.password);
@@ -151,7 +100,3 @@ module.exports.selectAllCustomers = selectAllCustomers;
 module.exports.updateProject = updateProject;
 module.exports.createUser = createUser;
 module.exports.validateUser = validateUser;
-// module.exports.selectAll(function(err, data){
-//   console.log(err);
-//   console.log(data);
-// });

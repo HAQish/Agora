@@ -3,90 +3,76 @@ var db = require('../database/index.js');
 var app = express(); // initializing app variable for routing
 var request = require('request');
 var session = require('express-session');
-app.use(session({
+app.use(session({ // the current version is not using sessions, but emulating it via react, currently have to relogin after a page refesh
   secret: 'Secret token',
   cookie: {
     maxAge: 6000000
   }
-}));
-// app.use((req, res, next) => {
-//  console.log(`${Date.now()} ${req.method} ${req.url} ${req.sessionID} ${req.session.id} ${req.session.cookie}`)
-//  next();
-// })
+})); // sessions seem to not persist, it seems that using passport rather than express-session helps with session permanence
+
 
 var bodyParser = require("body-parser"); // can parse incoming requests and possibly stringify outgoing responses
 app.use(bodyParser.json()); // setting for body parser
 app.use(bodyParser.urlencoded({ extended: false })); // another setting for body parser
 app.use(express.static(__dirname + '/../client/dist')); // location of static files, such as index.html
-// var premadeProjects = require("../dummyData.js")
 
-app.post("/projects", function(req, res) { // fetching projects from database
+// var premadeProjects = require("../dummyData.js") <== dummy data we used to test rendering without database connection
+
+app.post("/projects", function(req, res) { // fetching user-specific projects from database
   console.log("Heard get from app.");
-  console.log('In /projects, user: ', req.body.username);
-  db.selectAll(req.body.username).then(function(results) {
-    console.log('Results: ', results);
+  db.selectAll(req.body.username).then(function(results) {  // username coming from react state rather than session, see line 6
     res.send(JSON.stringify(results.projects))});
 })
 
-app.get("/customers", function(req, res) { // fetching customers from database
+app.get("/customers", function(req, res) { // fetching all customers from database, currently not working for specific user
   console.log("Heard request for all customers.");
-  console.log(req.session.user);
   db.selectAllCustomers().then(function(customers) {res.send(customers)});
 });
 
-app.post("/project", function(req, res) { // adding a new project to the database
-  console.log("in projects post route");
-  console.log(req.body);
+app.post("/project", function(req, res) { // adding a new project to the database, one in the Projects table, and a reference ID in the Users table
+  console.log("Heard post from app.");
   db.createProject(req.body.data, req.body.username); // Async issues
-  res.send(JSON.stringify(req.body) + " will be added to the database.");
+  res.send(JSON.stringify(req.body) + " will be added to the database."); // could potentially be send before project creation, .then causing issues
 })
 
-app.put("/projects", function(req, res) { // updating an existing project in the database
+app.put("/projects", function(req, res) { // updating an existing project in the database, no functionality linked to front end
   console.log("Heard put from app.");
-  db.updateProject(req.body); // send response first
+  db.updateProject(req.body);
 })
-
-  //the function in the database file should use tableName.findByIdAndUpdate(id, obj, optional callback)
-  //the first argument is the id of that particular row/project/document being modified in the database
-  //the second argument is the object that react is passing to the server, which the server is passing into the database
-  //that object should be the newest data reflecting the project, so if the name of the project was updated, the name in that object should not equal the name in the database until after the modify function runs
 
 app.post("/signup", function(req, res) { // signing up, creating new user in database with object from request body
   console.log("Signup attempt.");
-  console.log("in signup post route ");
-  console.log(req.body);
-  db.createUser(req.body); // assuming req.body.username is username and req.body.password is password
+  db.createUser(req.body);
+  // currently not sending a response
 })
 
 app.post("/login", function(req, res) { // logging in, needs to validate user with data from object in request body
-  //should take username, see if there's a match, and then see if the passwords match
   console.log('Login body: ', req.body);
   db.validateUser(req.body)
   .then(function(status) {
       console.log(status);
-      if (status) { // if user is validated, then officially create session
+      if (status) { // if user is validated, then officially create session, currently not implemented
         // req.session.regenerate(function(err) {
         //   if (err) console.log("ERROR: " + JSON.stringify(err));
         //   req.session.user = req.body.username;
         //   console.log('user session: ', req.session.user)
         //   res.send("true");
         // });
-        res.send("user is validated");
+        res.send("User is validated.");
       } else {
         res.send("Invalid credentials.");
-        // console.log(db.validateUser(req.body));
       }
   })
 })
 
-app.get("/logout", function(req, res) { // signing out, should destroy session
+app.get("/logout", function(req, res) { // signing out, destroys session, currently only being emulated on front end by clearing the state in React
   console.log("Signout attempt.");
   req.session.destroy(function() {
     res.send("Logged out.");
   })
 })
 
-// app.get("/", function(req, res) { // checking to see if logged in, and prompted to do so if not
+// app.get("/", function(req, res) { // checking to see if logged in, and prompted to do so if not, currently not implemented
 //   console.log('In / home route!');
 //   console.log('User session: ', req.session.user);
 //   if (!!req.session.user === false) {
@@ -95,6 +81,7 @@ app.get("/logout", function(req, res) { // signing out, should destroy session
 //     res.send("true");
 //   }
 // })
+
 
 var port = process.env.PORT || 8080;
 
