@@ -74,7 +74,7 @@ var Users = mongoose.model('Users', userSchema); // like Projects, is Users(capi
 var createUser = function(obj) { // creates new user document/row in Users collection/table
   var newObj = {
     username: obj.username,
-    password: obj.password
+    password: obj.password,
   };
 
   var newUser = new Users(newObj);
