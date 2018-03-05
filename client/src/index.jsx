@@ -76,16 +76,23 @@ class App extends React.Component {
     })
     .catch(error => console.error('Error: ', error))
     .then(this.setState({username: creds.username}))
+    .then(() => this.getProjects());
     //.then(res => res.json())
     //.then(this.setState({isAuthenticated: true}));
     console.log('Signup: ', creds);
   }
 
   handleLogout() {
-    fetch('/logout')
-    .then(console.log('Logged out successfully'))
-    .then(this.setState({username: ''}))
-    .catch(error => console.error('Error loggin out: ', error));
+    // fetch('/logout')
+    // .then(console.log('Logged out successfully'))
+    // .then(this.setState({username: ''}))
+    // .catch(error => console.error('Error loggin out: ', error));
+    this.setState({
+      projects: [],
+      currentProject: {},
+      isAuthenticated: false,
+      username: ''
+    })
   }
 
   render () {

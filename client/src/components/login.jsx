@@ -23,10 +23,19 @@ class Login extends React.Component {
   handleLogin(e) {
     e.preventDefault();
     this.props.login(this.state);
+    this.clearVals();
   }
   handleSignup(e) {
     e.preventDefault();
     this.props.signup(this.state);
+    this.clearVals();
+  }
+
+  clearVals() {
+    this.setState({
+      username: '',
+      password: ''
+    })
   }
 
   render() {
