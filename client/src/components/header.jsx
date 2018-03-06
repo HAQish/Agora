@@ -1,5 +1,6 @@
+// view to display header in splash page...not used in current iteration of app
+
 import React from 'react';
-//import logo from '../images/logo.png';
 
 var Header = (props) => {
   const searchStyle={

@@ -1,3 +1,5 @@
+// component for sidebar menu
+
 import React from 'react';
 import $ from 'jquery'; // might be temporary to make AJAX calls easier
 import { BrowserRouter, Link } from 'react-router-dom';
@@ -11,10 +13,9 @@ class Sidebar extends React.Component {
     }
   }
 
-  displayCustomers() { // should send an AJAX call, via jquery or react, querying the server/database for all customers
+  // submit request to server for customer info and store in this.state.customers
+  displayCustomers() {
     console.log("Display all customers.")
-    // fetch("/customers").then(function(response) {console.log(response)});
-    //trying with jquery's ajax
     $.ajax({
       url: "localhost:8080/customers",
       type: "GET",
@@ -29,12 +30,7 @@ class Sidebar extends React.Component {
 
   render () {
 
-    // var sideStyle = {
-    //   backgroundColor: "#FFF",
-    //   WebkitFilter: "drop-shadow(3px 0px 3px #666)",
-    //   filter: "drop-shadow(3px 0px 3px #666)"
-    // };
-
+   // NOTE: <Link> elements provide connection to BrowserRouter in index.jsx
     return (
       <div id="sidebar" className="col-sm-3">
         <ul className="list-group">

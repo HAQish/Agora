@@ -1,6 +1,6 @@
+// component for workspace; renders general project info -- NOT FULLY implemented in current iteration of app
+
 import React from 'react';
-
-
 
 class Workspace extends React.Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class Workspace extends React.Component {
   }
 
   handleChange(e) {
-    
+
   }
 
   render() {

@@ -1,16 +1,23 @@
+// component for signup
+
 import React from 'react';
 
 class Signup extends React.Component {
   constructor(props) {
     super(props);
+
+    // set initial state of input values
     this.state = {
       username: '',
       password: ''
     };
+
+    // bind event handlers to component context
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  // update state to reflect changes to input fields
   handleChange(e) {
     let name = e.target.name;
     let value = e.target.value;
@@ -19,6 +26,7 @@ class Signup extends React.Component {
     });
   }
 
+  // handle submission of form
   handleSubmit(e) {
     e.preventDefault();
     props.signup(this.state);

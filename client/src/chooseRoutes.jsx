@@ -1,3 +1,5 @@
+// incomplete and unsuccessful attempt to add splash page to react routing
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './index.jsx';

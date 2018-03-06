@@ -1,16 +1,11 @@
+// component for a single project in list
+
 import React from 'react';
 
 class ProjectListEntry extends React.Component {
   constructor(props) {
     super(props);
   }
-
-  // chooseProject(project) {
-  //   // Set clicked project to current project in state
-  //   // pass info to current project in index.jsx
-  //   // this.props.setProject(project);
-  //   console.log('set project as: ', project);
-  // }
 
   render() {
     const projectStyle = {

@@ -1,3 +1,5 @@
+// splash page component --- UNUSED in current iteration of app
+
 import React from 'react';
 import Navbar from './navbar.jsx';
 

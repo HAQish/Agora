@@ -1,24 +1,27 @@
-import React from 'react';
+// form view to handle project submissions
 
-//** TODO : REFACTOR FOR HIDDEN STYLING
+import React from 'react';
 
 class AddProject extends React.Component{
   constructor(props) {
     super(props);
+
+    // sets state with information required for adding a project
     this.state = {
       name: '',
       customer: '',
       description: '',
     };
+
+    // bind event handlers to component context
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxprops.action:',props.action);
     this.action = props.action;
   }
 
-  addProject(object) {
-    console.log(name);
 
+  // add an object to the database
+  addProject(object) {
       var url = '/project';
       var data = object;
       var username = this.props.username;
@@ -33,6 +36,8 @@ class AddProject extends React.Component{
       .then(this.action());
   }
 
+
+  // set state values to reflect form input
   handleChange (e) {
     var target = e.target;
     var name = target.name;
@@ -42,8 +47,8 @@ class AddProject extends React.Component{
     });
   }
 
+  // when button is clicked, send post request and clear form values
   handleSubmit(event) {
-    console.log(this.state);
     event.preventDefault();
     this.addProject(this.state);
     this.clearFormVals();

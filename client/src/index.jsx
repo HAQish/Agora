@@ -1,3 +1,5 @@
+// main app component
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Sidebar from './components/sidebar.jsx';
@@ -9,12 +11,14 @@ import Timeline from './components/timeline.jsx';
 import FinanceView from './components/financeview.jsx';
 import ResourceView from './components/resources.jsx';
 
+// imports necessary components for REACT-ROUTER functionality
 import { BrowserRouter, Router, Route, Switch } from 'react-router-dom';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
+    // sets initial state of app view as a whole
     this.state = {
       projects: [],
       currentProject: {},
@@ -23,16 +27,17 @@ class App extends React.Component {
     };
   }
 
+  // set current project to be displayed in different views
   setCurrentProject(project) {
     this.setState({currentProject: project})
-    //.then(<Link to="/workspace" />);
   }
 
+  // fetches projects from server after app mounts to page
   componentDidMount() {
-    console.log('Component mounting');
     this.getProjects();
   }
 
+  // fetches projects from database and updates state to reflect this data
   getProjects() {
     let username = this.state.username;
     console.log(username);
@@ -48,6 +53,7 @@ class App extends React.Component {
     .then((projects) => this.setState({currentProject: this.state.projects[0]}));
   }
 
+  // handlers for login and signup events -- NOT FULLY implemented
   handleLogin(creds) {
     // POST /login username and password then GET projects for that user
     // creds will be username/password from state of login component
@@ -82,6 +88,8 @@ class App extends React.Component {
     console.log('Signup: ', creds);
   }
 
+
+  // handles logout event -- NOT FULLY implemented
   handleLogout() {
     // fetch('/logout')
     // .then(console.log('Logged out successfully'))
@@ -100,6 +108,8 @@ class App extends React.Component {
       padding: '50px'
     }
 
+
+    // rendered component includes routes for REACT-ROUTER, using render properties to pass state and handlers to components
     return (
       <div className="container-fluid">
         <div>

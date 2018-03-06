@@ -1,17 +1,24 @@
+// component for login
+
 import React from 'react';
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
+
+    // set initial state for input values
     this.state = {
       username: '',
       password: ''
     };
+
+    //bind event handlers to component context
     this.handleChange = this.handleChange.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.handleSignup = this.handleSignup.bind(this);
   }
 
+  // update state to reflect changes to input fields
   handleChange(e) {
     let name = e.target.name;
     let value = e.target.value;
@@ -20,6 +27,7 @@ class Login extends React.Component {
     });
   }
 
+  // handlers for input actions
   handleLogin(e) {
     e.preventDefault();
     this.props.login(this.state);

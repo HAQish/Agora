@@ -1,6 +1,6 @@
+// component for informatin on resources used/needed for project
+
 import React from 'react';
-
-
 
 var ResourceView = (props) => {
   let resources = props.project.resources;

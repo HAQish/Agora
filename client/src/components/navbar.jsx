@@ -1,3 +1,5 @@
+// navbar component containing app name and login/signup functionality
+
 import React from 'react';
 import Login from './login.jsx';
 import Signup from './signup.jsx';

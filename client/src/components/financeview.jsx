@@ -1,3 +1,5 @@
+// view for financial informatiom related to project
+
 import React from 'react';
 
 var FinanceView = (props) => {
