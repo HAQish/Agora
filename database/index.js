@@ -15,12 +15,10 @@ db.once('open', function() {
 //  [{}] => an object within an array means that the schema can handle any number of objects in that array
           //as long as the key:value pairs match key name and value type
 var projectSchema = mongoose.Schema({
+    _id: Schema.Types.ObjectId,
     name: String,
     description: String,
-    customer: String,
-    resources: [{name:String, value:String}],
-    finances: [{name:String, value:String}],
-    timeline: {tasks:[{name:String,dueDate:Date}],start:Date, end:Date, status: String}
+    customer: String
   });
 
 var Projects = mongoose.model('Projects', projectSchema);
@@ -74,7 +72,7 @@ var Users = mongoose.model('Users', userSchema); // like Projects, is Users(capi
 var createUser = function(obj) { // creates new user document/row in Users collection/table
   var newObj = {
     username: obj.username,
-    password: obj.password,
+    password: obj.password
   };
 
   var newUser = new Users(newObj);

@@ -26,6 +26,7 @@ app.post("/projects", function(req, res) { // fetching user-specific projects fr
 
 app.get("/customers", function(req, res) { // fetching all customers from database, currently not working for specific user
   console.log("Heard request for all customers.");
+  console.log(req.session.user);
   db.selectAllCustomers().then(function(customers) {res.send(customers)});
 });
 
